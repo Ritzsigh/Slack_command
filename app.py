@@ -1,0 +1,13 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route('/', methods=['GET'])
+def home():
+    return "Flask App is Running!"
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    data = request.get_json()
+    print("Received data:", data)
+    return jsonify({"status": "success", "received": data}), 200
