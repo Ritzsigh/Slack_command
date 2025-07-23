@@ -2,23 +2,19 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# Root route for health check (GET and POST supported to avoid 405)
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def home():
     return "✅ Flask App is Running!"
 
-# Webhook route for Slack to POST data
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    data = request.get_json()
-    print("🔔 Received Slack data:", data)
+    data = request.form  # Slack sends form-encoded data
+    user_text = data.get('text', '')
+    user_id = data.get('user_id', '')
 
-    # Optionally process data here...
+    print("Received from Slack:", data)
 
     return jsonify({
-        "status": "success",
-        "received": data
-    }), 200
-
-if __name__ == '__main__':
-    app.run(debug=True)
+        "response_type": "in_channel",
+        "text": f"👋 Hi <@{user_id}>! You said: *{user_text}*"
+    })
