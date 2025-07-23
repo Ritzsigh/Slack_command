@@ -8,13 +8,12 @@ def home():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    data = request.form  # Slack sends form-encoded data
-    user_text = data.get('text', '')
-    user_id = data.get('user_id', '')
+    user_id = request.form.get("user_id", "")
+    user_text = request.form.get("text", "")
 
-    print("Received from Slack:", data)
+    print("From Slack:", request.form)
 
     return jsonify({
         "response_type": "in_channel",
-        "text": f"👋 Hi <@{user_id}>! You said: *{user_text}*"
+        "text": f"👋 Hello <@{user_id}>! You said: *{user_text}*"
     })
